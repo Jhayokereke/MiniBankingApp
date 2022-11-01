@@ -12,41 +12,35 @@ namespace MiniBankingApp
         {
             BankUsers = new List<BankUser>()
             {
-                new BankUser("ademola@thebulb.africa", "dgtughkchg")
+                new BankUser("ademola@thebulb.africa", "dgtughkchg", 2000)
                 {
                     Firstname = "Ademola",
-                    Lastname = "Balogun",
-                    BankAccount = new Account(20000)
+                    Lastname = "Balogun"
                 },
-                new BankUser("fortunate@thebulb.africa", "dgtughkchg")
+                new BankUser("fortunate@thebulb.africa", "dgtughkchg", 1000)
                 {
                     Firstname = "Fortunate",
-                    Lastname = "Omonuwa",
-                    BankAccount = new Account(1000)
+                    Lastname = "Omonuwa"
                 },
-                new BankUser("samson@thebulb.africa", "dgtughkchg")
+                new BankUser("samson@thebulb.africa", "dgtughkchg", 15200)
                 {
                     Firstname = "Samson",
-                    Lastname = "Dada",
-                    BankAccount = new Account(15200)
+                    Lastname = "Dada"
                 },
-                new BankUser("chisom@thebulb.africa", "dgtughkchg")
+                new BankUser("chisom@thebulb.africa", "dgtughkchg", 200)
                 {
                     Firstname = "Chisom",
-                    Lastname = "Iheme",
-                    BankAccount = new Account(200)
+                    Lastname = "Iheme"
                 },
-                new BankUser("james@thebulb.africa", "dgtughkchg")
+                new BankUser("james@thebulb.africa", "dgtughkchg", 1000)
                 {
                     Firstname = "James",
-                    Lastname = "Olukanni",
-                    BankAccount = new Account()
+                    Lastname = "Olukanni"
                 },
-                new BankUser("emmanuel@thebulb.africa", "dgtughkchg")
+                new BankUser("emmanuel@thebulb.africa", "dgtughkchg", 300)
                 {
                     Firstname = "Emmanuel",
-                    Lastname = "Ilivieda",
-                    BankAccount = new Account(7000)
+                    Lastname = "Ilivieda"
                 }
             };
         }

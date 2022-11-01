@@ -8,11 +8,11 @@ namespace MiniBankingApp
 {
     public class BankUser
     {
-        public BankUser(string email, string password)
+        public BankUser(string email, string password, decimal initialDeposit)
         {
             Email = email;
             Password = password;
-            //BankAccount = new Account();
+            BankAccount = new Account(initialDeposit);
         }
         public string Firstname { get; set; }
         public string Lastname { get; set; }

@@ -1,26 +1,54 @@
 ﻿// See https://aka.ms/new-console-template for more information
 using MiniBankingApp;
 
+Console.WriteLine("Welcome to The Bulb banking app.\nClick the 'enter' button to sign up or click 'backspace' to exit the application...");
 
-Database db = new Database();
-//var omode = new BankUser("omode@sapa.ng", "Nor=thadsgsbsj");
-//Console.WriteLine(omode.Password);
-///*
-// * omode comes to the bank with 10,000
-// * 
-// */
-//decimal omodesMoney = 10000;
-//var moneyLeftToDeposit = omodesMoney - 1000;
-//omode.BankAccount = new Account(moneyLeftToDeposit);
-
-//Console.WriteLine($"Omode's account number is {omode.BankAccount.Number} and balance is {omode.BankAccount.Balance:c2}");
-
-while (true)
+bool redo = false;
+do
 {
-    Console.Write("Account number: ");
-    string number = Console.ReadLine();
-    var user = db.BankUsers.Where(u => u.BankAccount.Number == number).FirstOrDefault();
-    Console.WriteLine($"User with name {user.Firstname} has {user.BankAccount.Balance}");
-    Console.ReadKey();
+    var keySelected = Console.ReadKey();
+    var keyValue = keySelected.Key;
+
+    switch (keyValue)
+    {
+        case ConsoleKey.Enter:
+            Console.WriteLine("You have selected the enter key\nProceed to sign Up");
+            Console.Clear();
+            Console.Write("Firstname: ");
+            string firstname = Console.ReadLine();
+            Console.Write("Lastname: ");
+            string lastname = Console.ReadLine();
+            Console.Write("Email: ");
+            string email = Console.ReadLine();
+            Console.Write("Password: ");
+            string password = Console.ReadLine();
+            Console.Write("Deposit Amount: ");
+            decimal initialDeposit = decimal.Parse(Console.ReadLine());
+            SignUp(email, password, initialDeposit, firstname, lastname);
+            redo = false;
+            break;
+        case ConsoleKey.Backspace:
+            Console.WriteLine("You have selected the backspace key");
+            redo = false;
+            break;
+        default:
+            Console.WriteLine("I don't understand. Please retry");
+            redo = true;
+            break;
+    }
+} while (redo);
+Console.WriteLine("\nGoodbye!");
+
+
+void SignUp(string email, string password, decimal initialDeposit, string firstname, string lastname)
+{
+    BankUser user = new BankUser(email, password, initialDeposit)
+    {
+        Lastname = lastname,
+        Firstname = firstname
+    };
+
+    Console.WriteLine($"New account created for {user.Firstname}");
 }
+
 
