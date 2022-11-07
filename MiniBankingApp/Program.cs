@@ -1,5 +1,6 @@
 ﻿// See https://aka.ms/new-console-template for more information
 using MiniBankingApp;
+using System.Text.RegularExpressions;
 
 Console.WriteLine("Welcome to The Bulb banking app.\nClick the 'enter' button to sign up or click 'backspace' to exit the application...");
 
@@ -12,18 +13,48 @@ do
     switch (keyValue)
     {
         case ConsoleKey.Enter:
-            Console.WriteLine("You have selected the enter key\nProceed to sign Up");
+            Console.WriteLine("You have selected the enter key\nProceed to sign up...");
+            Thread.Sleep(1000);
             Console.Clear();
+
             Console.Write("Firstname: ");
             string firstname = Console.ReadLine();
+
             Console.Write("Lastname: ");
             string lastname = Console.ReadLine();
-            Console.Write("Email: ");
-            string email = Console.ReadLine();
+
+            string email;
+            bool isValidEmail;
+            do
+            {
+                Console.Write("Email: ");
+                email = Console.ReadLine(); 
+                isValidEmail = ValidateEmail(email);
+                if (!isValidEmail)
+                {
+                    Console.BackgroundColor = ConsoleColor.Red;
+                    Console.WriteLine("Not a valid email address. Please retry!");
+                    Console.ResetColor();
+                }
+            } while (!isValidEmail);
+
             Console.Write("Password: ");
             string password = Console.ReadLine();
-            Console.Write("Deposit Amount: ");
-            decimal initialDeposit = decimal.Parse(Console.ReadLine());
+
+            decimal initialDeposit;
+            bool isNumber;
+            do
+            {
+                Console.Write("Deposit Amount: ");
+                isNumber = decimal.TryParse(Console.ReadLine(), out initialDeposit);
+                if (!isNumber)
+                {
+                    Console.BackgroundColor = ConsoleColor.Red;
+                    Console.WriteLine("Not a valid amount. Please retry!");
+                    Console.ResetColor();
+                }
+            } while (!isNumber);
+
             SignUp(email, password, initialDeposit, firstname, lastname);
             redo = false;
             break;
@@ -37,10 +68,10 @@ do
             break;
     }
 } while (redo);
+
 Console.WriteLine("\nGoodbye!");
 
-
-void SignUp(string email, string password, decimal initialDeposit, string firstname, string lastname)
+static void SignUp(string email, string password, decimal initialDeposit, string firstname, string lastname)
 {
     BankUser user = new BankUser(email, password, initialDeposit)
     {
@@ -51,4 +82,14 @@ void SignUp(string email, string password, decimal initialDeposit, string firstn
     Console.WriteLine($"New account created for {user.Firstname}");
 }
 
+static bool ValidateEmail(string email)
+{
+    Regex regex = new Regex(@"^[\w-\.]+[\w]@([\w-]+\.)+[\w-]{2,4}$");
+    return regex.IsMatch(email);
+}
 
+static bool ValidatePassword(string password)
+{
+    Regex regex = new Regex(@"");
+    return regex.IsMatch(password);
+}

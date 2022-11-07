@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace MiniBankingApp
 {
-    public class Database
+    public static class Database
     {
-        public Database()
+        static Database()
         {
             BankUsers = new List<BankUser>()
             {
@@ -44,6 +44,7 @@ namespace MiniBankingApp
                 }
             };
         }
-        public List<BankUser> BankUsers { get; set; }
+        public static List<BankUser> BankUsers { get; set; }
+        public static List<Account> Accounts { get; set; }
     }
 }

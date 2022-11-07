@@ -12,7 +12,6 @@ namespace MiniBankingApp
         {
             Email = email;
             Password = password;
-            BankAccount = new Account(initialDeposit);
         }
         public string Firstname { get; set; }
         public string Lastname { get; set; }
