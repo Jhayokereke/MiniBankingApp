@@ -60,6 +60,22 @@ namespace MiniBankingApp.BusinessLogic
             return _accountRepo.Update(account);
         }
 
+        public string GenerateStatement(string accountNumber, string transactionPin)
+        {
+            Account account = _accountRepo.Get(accountNumber);
+
+            ICollection<string> transactions = account.Transactions;
+
+            string statement = $"Account Statement for {account.Number}";
+
+            foreach (string transaction in transactions)
+            {
+                statement += $"\n{transaction}";
+            }
+
+            return statement;
+        }
+
         public bool Transfer(string sourceAccountNumber, decimal amount, string transactionPin, string destAccountNumber)
         {
             //withdraw from source
@@ -100,7 +116,7 @@ namespace MiniBankingApp.BusinessLogic
             }
 
             account.Balance -= amount;
-
+            account.Transactions.Add($"DR - {DateTime.Now} - Withdrawal of {amount:c2}.");
             bool updated = _accountRepo.Update(account);
 
             if (!updated)

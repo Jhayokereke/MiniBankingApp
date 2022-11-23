@@ -15,8 +15,8 @@ namespace MiniBankingApp.Data
         public Account Add(Account account)
         {
             account.Id = Generator.GenerateId();
-            _db.Add(account);
             account.CreatedOn = DateTime.Now;
+            _db.Add(account);
 
             return account;
         }

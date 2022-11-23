@@ -41,6 +41,16 @@ namespace MiniBankingApp.BusinessLogic
             return _userRepo.Delete(userId);
         }
 
+        public BankUser GetUserByEmail(string email)
+        {
+            return _userRepo.GetAll().FirstOrDefault(u => u.Email == email);
+        }
+
+        public BankUser GetUserById(string Id)
+        {
+            throw new NotImplementedException();
+        }
+
         public bool UpdateUser(BankUser user)
         {
             return _userRepo.Update(user);

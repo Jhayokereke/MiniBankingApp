@@ -10,5 +10,6 @@ namespace MiniBankingApp.BusinessLogic
         decimal Withdraw(string accountNumber, decimal amount, string transactionPin);
         decimal CheckBalance(string accountNumber, string transactionPin);
         bool Transfer(string sourceAccountNumber, decimal amount, string transactionPin, string destAccountNumber);
+        string GenerateStatement(string accountNumber, string transactionPin);
     }
 }

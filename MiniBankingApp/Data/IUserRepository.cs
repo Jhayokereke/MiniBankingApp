@@ -8,5 +8,6 @@ namespace MiniBankingApp.Data
         bool Update(BankUser updatedUser);
         BankUser Get(string id);
         bool Delete(string id);
+        ICollection<BankUser> GetAll();
     }
 }
