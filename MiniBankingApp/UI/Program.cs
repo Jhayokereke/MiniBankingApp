@@ -1,5 +1,6 @@
 ﻿// See https://aka.ms/new-console-template for more information
-using MiniBankingApp;
+using MiniBankingApp.Models;
+using System.Numerics;
 using System.Text.RegularExpressions;
 
 Console.WriteLine("Welcome to The Bulb banking app.\nClick the 'enter' button to sign up or click 'backspace' to exit the application...");
@@ -78,6 +79,10 @@ static void SignUp(string email, string password, decimal initialDeposit, string
         Lastname = lastname,
         Firstname = firstname
     };
+
+    //create a user
+    //create an account
+    //map user to the account
 
     Console.WriteLine($"New account created for {user.Firstname}");
 }

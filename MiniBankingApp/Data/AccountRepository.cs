@@ -1,44 +1,56 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using MiniBankingApp.Models;
+using MiniBankingApp.Utilities;
 
 namespace MiniBankingApp.Data
 {
     public class AccountRepository : IAccountRepository
     {
-        public Account Add(BankUser user, decimal initialDeposit)
+        private readonly ICollection<Account> _db;
+
+        public AccountRepository(ICollection<Account> database)
         {
-            //create the account
-            //link the account to the owner
-            user.BankAccount = new Account(initialDeposit);
-            //add to database
-            Database.
-            //return the created account
+            _db = database;
+        }
+
+        public Account Add(Account account)
+        {
+            account.Id = IdGenerator.GenerateId();
+            _db.Add(account);
+            account.CreatedOn = DateTime.Now;
+
+            return account;
         }
 
         public bool Delete(string accountNumber)
         {
-            throw new NotImplementedException();
+            Account accountToDelete = Get(accountNumber);
+            if (accountToDelete == null)
+            {
+                return false;
+            }
+
+            return _db.Remove(accountToDelete);
         }
 
         public Account Get(string accountNumber)
         {
-            throw new NotImplementedException();
+            return _db.FirstOrDefault(x => x.Number == accountNumber);
         }
 
-        public bool Update(Account accountToBeUpdated)
+        public bool Update(Account updatedAccount)
         {
-            throw new NotImplementedException();
-        }
-    }
+            Account unUpdatedAccount = Get(updatedAccount.Number);
 
-    public interface IAccountRepository
-    {
-        Account Add(BankUser user, decimal initialDeposit);
-        bool Update(Account accountToBeUpdated);
-        bool Delete(string accountNumber);
-        Account Get(string accountNumber);
+            if (unUpdatedAccount == null)
+            {
+                return false;
+            }
+
+            unUpdatedAccount.TransactionPin = updatedAccount.TransactionPin;
+            unUpdatedAccount.Balance = updatedAccount.Balance;
+            unUpdatedAccount.ModifiedOn = DateTime.Now;
+
+            return true;
+        }
     }
 }

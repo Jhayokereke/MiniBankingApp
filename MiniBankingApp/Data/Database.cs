@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using MiniBankingApp.Models;
 
-namespace MiniBankingApp
+namespace MiniBankingApp.Data
 {
     public static class Database
     {
@@ -12,32 +13,35 @@ namespace MiniBankingApp
         {
             BankUsers = new List<BankUser>()
             {
-                new BankUser("ademola@thebulb.africa", "dgtughkchg", 2000)
+                new BankUser()
                 {
                     Firstname = "Ademola",
-                    Lastname = "Balogun"
+                    Lastname = "Balogun",
+                    Email = "ademola@thebulb.africa"
                 },
-                new BankUser("fortunate@thebulb.africa", "dgtughkchg", 1000)
+                new BankUser()
                 {
                     Firstname = "Fortunate",
-                    Lastname = "Omonuwa"
+                    Lastname = "Omonuwa",
+                    Email = "fortunate@thebulb.africa"
                 },
-                new BankUser("samson@thebulb.africa", "dgtughkchg", 15200)
+                new BankUser()
                 {
                     Firstname = "Samson",
-                    Lastname = "Dada"
+                    Lastname = "Dada",
+                    Email = "samson@thebulb.africa"
                 },
-                new BankUser("chisom@thebulb.africa", "dgtughkchg", 200)
+                new BankUser()
                 {
                     Firstname = "Chisom",
                     Lastname = "Iheme"
                 },
-                new BankUser("james@thebulb.africa", "dgtughkchg", 1000)
+                new BankUser()
                 {
                     Firstname = "James",
                     Lastname = "Olukanni"
                 },
-                new BankUser("emmanuel@thebulb.africa", "dgtughkchg", 300)
+                new BankUser()
                 {
                     Firstname = "Emmanuel",
                     Lastname = "Ilivieda"
