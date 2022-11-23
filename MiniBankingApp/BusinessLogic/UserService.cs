@@ -1,20 +1,22 @@
-﻿using MiniBankingApp.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using MiniBankingApp.Data;
+using MiniBankingApp.Models;
 
 namespace MiniBankingApp.BusinessLogic
 {
     public class UserService : IUserService
     {
-        public UserService()
-        {
+        private readonly IUserRepository _userRepo;
+        private readonly IAccountService _accountServ;
 
-        }
-        public BankUser CreateUser(string fname, string lname, string email, string password)
+        public UserService(IUserRepository userRepository, IAccountService accountService)
         {
+            _userRepo = userRepository;
+            _accountServ = accountService;
+        }
+
+        public BankUser CreateUser(string fname, string lname, string email, string password, decimal initialDeposit)
+        {
+            //create a new user object
             BankUser newUser = new BankUser
             {
                 Firstname = fname,
@@ -24,24 +26,24 @@ namespace MiniBankingApp.BusinessLogic
                 BankAccounts = new List<Account>()
             };
 
+            //create a new account object
+            Account newAccount = _accountServ.CreateAccount(initialDeposit);
+            //map the account object to the user object
+            newUser.BankAccounts.Add(newAccount);
+            //add the user object to the database
+            newUser = _userRepo.Add(newUser);
 
+            return newUser;
         }
 
         public bool DeleteUser(string userId)
         {
-            throw new NotImplementedException();
+            return _userRepo.Delete(userId);
         }
 
         public bool UpdateUser(BankUser user)
         {
-            throw new NotImplementedException();
+            return _userRepo.Update(user);
         }
-    }
-
-    public interface IUserService
-    {
-        BankUser CreateUser(string fname, string lname, string email, string password);
-        bool DeleteUser(string userId);
-        bool UpdateUser(BankUser user);
     }
 }
