@@ -1,7 +1,4 @@
-﻿using MiniBankingApp.Models;
-using System.Text;
-
-namespace MiniBankingApp.Utilities
+﻿namespace MiniBankingApp.Core.Utilities
 {
     public static class Generator
     {

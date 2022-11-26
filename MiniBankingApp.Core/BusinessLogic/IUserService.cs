@@ -1,6 +1,6 @@
-﻿using MiniBankingApp.Models;
+﻿using MiniBankingApp.Core.Models;
 
-namespace MiniBankingApp.BusinessLogic
+namespace MiniBankingApp.Core.BusinessLogic
 {
     public interface IUserService
     {

@@ -1,4 +1,4 @@
-﻿namespace MiniBankingApp.Models
+﻿namespace MiniBankingApp.Core.Models
 {
     public class Account : BaseEntity
     {

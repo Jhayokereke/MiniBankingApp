@@ -1,11 +1,12 @@
-﻿using MiniBankingApp.BusinessLogic;
-using MiniBankingApp.Models;
-using MiniBankingApp.Utilities;
-using System.Text.RegularExpressions;
+﻿using MiniBankingApp.Core.BusinessLogic;
+using MiniBankingApp.Core.Data;
+using MiniBankingApp.Core.Models;
+using MiniBankingApp.Core.Utilities;
+using System.Globalization;
 
 namespace MiniBankingApp.UI
 {
-    public class App
+    public class App : IApp
     {
         private readonly IUserService _userServ;
         private readonly IAccountService _accountServ;
@@ -15,8 +16,10 @@ namespace MiniBankingApp.UI
             _userServ = userService;
             _accountServ = accountService;
         }
+
         public void Start()
         {
+            Database.Seed(_userServ);
             Console.WriteLine("Welcome to The Bulb banking app.\nClick the 'enter' button to sign up, 'tab' button to login or 'backspace' to exit the application...");
 
             bool redo = false;
@@ -89,10 +92,10 @@ namespace MiniBankingApp.UI
                             if (email != null && password != null)
                             {
                                 BankUser? signedInUser = SignIn(email, password);
-                                signedIn = true;
 
                                 if (signedInUser != null)
                                 {
+                                    Console.WriteLine("Welcome {0}", signedInUser.Firstname);
                                     LoggedIn(signedInUser);
                                     redo = false;
                                     break;
@@ -101,6 +104,7 @@ namespace MiniBankingApp.UI
 
                             Console.ForegroundColor = ConsoleColor.Red;
                             Console.WriteLine("Incorrect email or password!!!");
+                            Console.ResetColor();
                         }
                         while (!signedIn);
 
@@ -130,7 +134,7 @@ namespace MiniBankingApp.UI
         {
             BankUser user = _userServ.GetUserByEmail(email);
 
-            if(user.Password != password)
+            if (user == null || user.Password != password)
             {
                 return null;
             }
@@ -140,7 +144,78 @@ namespace MiniBankingApp.UI
 
         private void LoggedIn(BankUser user)
         {
-            Console.WriteLine("");
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine("What will you like to do next?" +
+                "\nClick one of the following keys to perform an action:" +
+                "\n'D' - To make a deposit" +
+                "\n'W' - To make a Withdrawal" +
+                "\n'T' - To make a Transfer" +
+                "\n'S' - To print your statement" +
+                "\n'N' - To open a new account" +
+                "\n'ESC' - To Logout");
+            var key = Console.ReadKey().Key;
+            Console.WriteLine();
+            Thread.Sleep(500);
+
+            switch(key)
+            {
+                case ConsoleKey.D:
+                    Console.Write("Account to credit: ");
+                    var accountNumber = Console.ReadLine();
+                    Console.Write("Amount: ");
+                    var amount = decimal.Parse(Console.ReadLine());
+                    Console.Write("Narration: ");
+                    var narration = Console.ReadLine();
+
+                    Console.WriteLine(string.Format(new CultureInfo("en-NG"), "Attempting to deposit {0:c2} to {1}. Click Enter to confirm!", amount, accountNumber));
+                    if (Console.ReadKey().Key != ConsoleKey.Enter)
+                    {
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.WriteLine($"Cancelled...");
+                        Console.ResetColor();
+                    }
+                    else
+                    {
+                        var success = _accountServ.Deposit(accountNumber, amount, narration);
+                        if (success)
+                        {
+                            Console.ForegroundColor = ConsoleColor.Green;
+                            Console.WriteLine($"Successful...");
+                            Console.ResetColor();
+                        }
+                        else
+                        {
+                            Console.ForegroundColor = ConsoleColor.Red;
+                            Console.WriteLine($"Failed...");
+                            Console.ResetColor();
+                        }
+                    }
+                    LoggedIn(user);
+                    break;
+                case ConsoleKey.W:
+                    break;
+                case ConsoleKey.T:
+                    break;
+                case ConsoleKey.S:
+                    Console.Write("Target account: ");
+                    accountNumber = Console.ReadLine();
+                    Console.Write("Transaction pin: ");
+                    var transactionPin = Console.ReadLine();
+                    Console.Write("Start date: ");
+                    var from = DateTime.ParseExact(Console.ReadLine(), "dd/MM/yy", CultureInfo.InvariantCulture);
+                    Console.Write("End date: ");
+                    var to = DateTime.ParseExact(Console.ReadLine(), "dd/MM/yy", CultureInfo.InvariantCulture);
+                    _accountServ.GenerateStatement(accountNumber, transactionPin, from, to);
+                    break;
+                case ConsoleKey.N:
+                    break;
+                case ConsoleKey.Escape:
+                    break;
+                default:
+                    Console.WriteLine("Sorry! I do not understand...");
+                    LoggedIn(user);
+                    break;
+            }
         }
     }
 }

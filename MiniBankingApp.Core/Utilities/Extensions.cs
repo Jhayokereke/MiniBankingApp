@@ -1,12 +1,7 @@
 ﻿using ConsoleTables;
-using MiniBankingApp.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using MiniBankingApp.Core.Models;
 
-namespace MiniBankingApp.Utilities
+namespace MiniBankingApp.Core.Utilities
 {
     public static class Extensions
     {

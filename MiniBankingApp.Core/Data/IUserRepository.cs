@@ -1,6 +1,6 @@
-﻿using MiniBankingApp.Models;
+﻿using MiniBankingApp.Core.Models;
 
-namespace MiniBankingApp.Data
+namespace MiniBankingApp.Core.Data
 {
     public interface IUserRepository
     {

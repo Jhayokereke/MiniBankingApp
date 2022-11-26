@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MiniBankingApp.Models
+namespace MiniBankingApp.Core.Models
 {
     public class Address : BaseEntity
     {

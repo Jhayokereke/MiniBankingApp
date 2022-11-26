@@ -1,15 +1,15 @@
-﻿using MiniBankingApp.Models;
-using MiniBankingApp.Utilities;
+﻿using MiniBankingApp.Core.Models;
+using MiniBankingApp.Core.Utilities;
 
-namespace MiniBankingApp.Data
+namespace MiniBankingApp.Core.Data
 {
     public class AccountRepository : IAccountRepository
     {
         private readonly ICollection<Account> _db;
 
-        public AccountRepository(ICollection<Account> database)
+        public AccountRepository()
         {
-            _db = database;
+            _db = Database.Accounts;
         }
 
         public Account Add(Account account)

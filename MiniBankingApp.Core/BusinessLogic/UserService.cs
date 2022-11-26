@@ -1,7 +1,7 @@
-﻿using MiniBankingApp.Data;
-using MiniBankingApp.Models;
+﻿using MiniBankingApp.Core.Data;
+using MiniBankingApp.Core.Models;
 
-namespace MiniBankingApp.BusinessLogic
+namespace MiniBankingApp.Core.BusinessLogic
 {
     public class UserService : IUserService
     {

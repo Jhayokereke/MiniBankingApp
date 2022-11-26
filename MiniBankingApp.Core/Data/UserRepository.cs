@@ -1,21 +1,15 @@
-﻿using MiniBankingApp.Models;
-using MiniBankingApp.Utilities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Principal;
-using System.Text;
-using System.Threading.Tasks;
+﻿using MiniBankingApp.Core.Models;
+using MiniBankingApp.Core.Utilities;
 
-namespace MiniBankingApp.Data
+namespace MiniBankingApp.Core.Data
 {
     public class UserRepository : IUserRepository
     {
         private readonly ICollection<BankUser> _db;
 
-        public UserRepository(ICollection<BankUser> database)
+        public UserRepository()
         {
-            _db = database;
+            _db = Database.BankUsers;
         }
 
         public BankUser Add(BankUser newUser)

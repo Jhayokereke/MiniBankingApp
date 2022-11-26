@@ -1,8 +1,8 @@
-﻿using MiniBankingApp.Data;
-using MiniBankingApp.Models;
-using MiniBankingApp.Utilities;
+﻿using MiniBankingApp.Core.Data;
+using MiniBankingApp.Core.Models;
+using MiniBankingApp.Core.Utilities;
 
-namespace MiniBankingApp.BusinessLogic
+namespace MiniBankingApp.Core.BusinessLogic
 {
     public class AccountService : IAccountService
     {
@@ -63,6 +63,7 @@ namespace MiniBankingApp.BusinessLogic
             {
                 Type = Transaction.TransactionType.Credit,
                 AccountId = account.Id,
+                TransactionTime = DateTime.Now,
                 Amount = amount,
                 BalanceAfter = account.Balance,
                 Description = CREDIT_DESCRIPTION_TEMPLATE.Replace("#amount", amount.ToString()).Replace("#balance", account.Balance.ToString()).Replace("#narration", narration)
@@ -82,8 +83,8 @@ namespace MiniBankingApp.BusinessLogic
             {
                 Console.ForegroundColor = ConsoleColor.DarkGreen;
                 Console.WriteLine(header);
-                Console.ResetColor();
                 transactions.GenerateStatement(to, from);
+                Console.ResetColor();
             }
         }
 
@@ -127,10 +128,17 @@ namespace MiniBankingApp.BusinessLogic
             }
 
             account.Balance -= amount;
+
+            if (account.Balance < 1000)
+            {
+                return 0;
+            }
+
             account.Transactions.Add(new Transaction
             {
                 Type = Transaction.TransactionType.Credit,
                 AccountId = account.Id,
+                TransactionTime = DateTime.Now,
                 Amount = amount,
                 BalanceAfter = account.Balance,
                 Description = DEBIT_DESCRIPTION_TEMPLATE.Replace("#amount", amount.ToString()).Replace("#balance", account.Balance.ToString()).Replace("#narration", narration)
@@ -159,10 +167,25 @@ namespace MiniBankingApp.BusinessLogic
             {
                 Type = Transaction.TransactionType.Credit,
                 AccountId = account.Id,
+                TransactionTime = DateTime.Now,
                 Amount = amount,
                 BalanceAfter = account.Balance,
                 Description = REVERSAL_DESCRIPTION_TEMPLATE.Replace("#amount", amount.ToString()).Replace("#balance", account.Balance.ToString())
             });
+            return _accountRepo.Update(account);
+        }
+
+        public bool ChangeTransactionPin(string accountNumber, string oldPin, string newPin)
+        {
+            Account account = _accountRepo.Get(accountNumber);
+
+            if (account == null || account.TransactionPin != oldPin)
+            {
+                return false;
+            }
+
+            account.TransactionPin = newPin;
+
             return _accountRepo.Update(account);
         }
     }

@@ -1,6 +1,6 @@
-﻿using MiniBankingApp.Models;
+﻿using MiniBankingApp.Core.Models;
 
-namespace MiniBankingApp.BusinessLogic
+namespace MiniBankingApp.Core.BusinessLogic
 {
     public interface IAccountService
     {
@@ -11,5 +11,6 @@ namespace MiniBankingApp.BusinessLogic
         decimal CheckBalance(string accountNumber, string transactionPin);
         bool Transfer(string sourceAccountNumber, decimal amount, string transactionPin, string destAccountNumber, string narration);
         void GenerateStatement(string accountNumber, string transactionPin, DateTime from, DateTime to);
+        bool ChangeTransactionPin(string accountNumber, string oldPin, string newPin);
     }
 }

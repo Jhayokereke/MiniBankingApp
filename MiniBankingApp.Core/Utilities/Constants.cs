@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MiniBankingApp.Utilities
+namespace MiniBankingApp.Core.Utilities
 {
     public static class Constants
     {
