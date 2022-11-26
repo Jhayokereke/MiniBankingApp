@@ -7,6 +7,9 @@ namespace MiniBankingApp.BusinessLogic
     public class AccountService : IAccountService
     {
         private readonly IAccountRepository _accountRepo;
+        private const string CREDIT_DESCRIPTION_TEMPLATE = "CR - Deposit of #amount - #narration - Avail. Bal: #balance";
+        private const string DEBIT_DESCRIPTION_TEMPLATE = "DR - Withrawal of #amount - #narration - Avail. Bal: #balance";
+        private const string REVERSAL_DESCRIPTION_TEMPLATE = "RVSL - Reversal of #amount - Avail. Bal: #balance";
 
         public AccountService(IAccountRepository accountRepository)
         {
@@ -33,7 +36,7 @@ namespace MiniBankingApp.BusinessLogic
                 Balance = initialDeposit,
                 TransactionPin = Constants.DEFAULT_TRANSACTION_PIN,
                 Number = Generator.GenerateAccountNumber(),
-                Transactions = new List<string>()
+                Transactions = new List<Transaction>()
             };
 
             newAccount = _accountRepo.Add(newAccount);
@@ -46,7 +49,7 @@ namespace MiniBankingApp.BusinessLogic
             throw new NotImplementedException();
         }
 
-        public bool Deposit(string accountNumber, decimal amount)
+        public bool Deposit(string accountNumber, decimal amount, string narration = "")
         {
             Account account = _accountRepo.Get(accountNumber);
 
@@ -56,27 +59,35 @@ namespace MiniBankingApp.BusinessLogic
             }
 
             account.Balance += amount;
-            account.Transactions.Add($"CR - {DateTime.Now} - Deposit of {amount:c2}.");
+            account.Transactions.Add(new Transaction
+            {
+                Type = Transaction.TransactionType.Credit,
+                AccountId = account.Id,
+                Amount = amount,
+                BalanceAfter = account.Balance,
+                Description = CREDIT_DESCRIPTION_TEMPLATE.Replace("#amount", amount.ToString()).Replace("#balance", account.Balance.ToString()).Replace("#narration", narration)
+            });
             return _accountRepo.Update(account);
         }
 
-        public string GenerateStatement(string accountNumber, string transactionPin)
+        public void GenerateStatement(string accountNumber, string transactionPin, DateTime from, DateTime to)
         {
             Account account = _accountRepo.Get(accountNumber);
 
-            ICollection<string> transactions = account.Transactions;
+            ICollection<Transaction> transactions = account.Transactions;
 
-            string statement = $"Account Statement for {account.Number}";
+            string header = $"Account Statement for {account.Number} {from:dd/MM/yyyy} - {to.Date:dd/MM/yyyy}";
 
-            foreach (string transaction in transactions)
+            if (account.TransactionPin == transactionPin)
             {
-                statement += $"\n{transaction}";
+                Console.ForegroundColor = ConsoleColor.DarkGreen;
+                Console.WriteLine(header);
+                Console.ResetColor();
+                transactions.GenerateStatement(to, from);
             }
-
-            return statement;
         }
 
-        public bool Transfer(string sourceAccountNumber, decimal amount, string transactionPin, string destAccountNumber)
+        public bool Transfer(string sourceAccountNumber, decimal amount, string transactionPin, string destAccountNumber, string narration = "")
         {
             //withdraw from source
             decimal amountToTransfer = Withdraw(sourceAccountNumber, amount, transactionPin);
@@ -103,7 +114,7 @@ namespace MiniBankingApp.BusinessLogic
             return success;
         }
 
-        public decimal Withdraw(string accountNumber, decimal amount, string transactionPin)
+        public decimal Withdraw(string accountNumber, decimal amount, string transactionPin, string narration = "")
         {
             Account account = _accountRepo.Get(accountNumber);
 
@@ -116,7 +127,14 @@ namespace MiniBankingApp.BusinessLogic
             }
 
             account.Balance -= amount;
-            account.Transactions.Add($"DR - {DateTime.Now} - Withdrawal of {amount:c2}.");
+            account.Transactions.Add(new Transaction
+            {
+                Type = Transaction.TransactionType.Credit,
+                AccountId = account.Id,
+                Amount = amount,
+                BalanceAfter = account.Balance,
+                Description = DEBIT_DESCRIPTION_TEMPLATE.Replace("#amount", amount.ToString()).Replace("#balance", account.Balance.ToString()).Replace("#narration", narration)
+            });
             bool updated = _accountRepo.Update(account);
 
             if (!updated)
@@ -137,7 +155,14 @@ namespace MiniBankingApp.BusinessLogic
             }
 
             account.Balance += amount;
-            account.Transactions.Add($"RVSL - {DateTime.Now} - Reversal of {amount:c2}.");
+            account.Transactions.Add(new Transaction
+            {
+                Type = Transaction.TransactionType.Credit,
+                AccountId = account.Id,
+                Amount = amount,
+                BalanceAfter = account.Balance,
+                Description = REVERSAL_DESCRIPTION_TEMPLATE.Replace("#amount", amount.ToString()).Replace("#balance", account.Balance.ToString())
+            });
             return _accountRepo.Update(account);
         }
     }

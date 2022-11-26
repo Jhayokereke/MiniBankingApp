@@ -10,7 +10,6 @@ namespace MiniBankingApp.Utilities
     {
         public static bool EncryptPassword(string password, out byte[] passwordSalt, out byte[] passwordHash)
         {
-
             // convert password to hash value and generate salt
             using (var hash = new System.Security.Cryptography.HMACSHA512())
             {

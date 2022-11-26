@@ -5,6 +5,6 @@
         public string Number { get; set; }
         public string TransactionPin { get; set; }
         public decimal Balance { get; set; }
-        public ICollection<string> Transactions { get; set; }
+        public ICollection<Transaction> Transactions { get; set; }
     }
 }

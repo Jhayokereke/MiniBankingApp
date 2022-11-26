@@ -140,7 +140,7 @@ namespace MiniBankingApp.UI
 
         private void LoggedIn(BankUser user)
         {
-
+            Console.WriteLine("");
         }
     }
 }
