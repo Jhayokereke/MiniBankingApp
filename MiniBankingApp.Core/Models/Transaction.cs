@@ -1,4 +1,6 @@
-﻿namespace MiniBankingApp.Core.Models
+﻿using MiniBankingApp.Core.Models.Enums;
+
+namespace MiniBankingApp.Core.Models
 {
     public class Transaction : BaseEntity
     {
@@ -8,11 +10,5 @@
         public decimal Amount { get; set; }
         public decimal BalanceAfter { get; set; }
         public string AccountId { get; set; }
-        public enum TransactionType
-        {
-            Debit,
-            Credit,
-            Reversal
-        }
     }
 }

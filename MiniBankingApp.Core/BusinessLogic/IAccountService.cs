@@ -1,10 +1,12 @@
 ﻿using MiniBankingApp.Core.Models;
+using MiniBankingApp.Core.Models.Enums;
 
 namespace MiniBankingApp.Core.BusinessLogic
 {
     public interface IAccountService
     {
-        Account CreateAccount(decimal initialDeposit);
+        event EventHandler<string> TransactionCompleted;
+        Account CreateAccount(AccountType type, decimal initialDeposit);
         ICollection<Account> CreateMultipleAccounts(decimal[] initialDeposits);
         bool Deposit(string accountNumber, decimal amount, string narration);
         decimal Withdraw(string accountNumber, decimal amount, string transactionPin, string narration);

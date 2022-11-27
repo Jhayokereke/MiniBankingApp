@@ -1,6 +1,7 @@
 ﻿using MiniBankingApp.Core.BusinessLogic;
 using MiniBankingApp.Core.Data;
 using MiniBankingApp.Core.Models;
+using MiniBankingApp.Core.Models.Enums;
 using MiniBankingApp.Core.Utilities;
 using System.Globalization;
 
@@ -15,6 +16,7 @@ namespace MiniBankingApp.UI
         {
             _userServ = userService;
             _accountServ = accountService;
+            _accountServ.TransactionCompleted += OnTransactionCompleted;
         }
 
         public void Start()
@@ -59,6 +61,16 @@ namespace MiniBankingApp.UI
                         Console.Write("Password: ");
                         string password = Console.ReadLine();
 
+                        Console.WriteLine("For Current Account enter 'C'");
+                        Console.WriteLine("For Savings Account enter 'S'");
+                        Console.Write("Account Type: ");
+                        var key = Console.ReadKey().Key;
+                        AccountType type = AccountType.Savings;
+                        if (key == ConsoleKey.C)
+                        {
+                            type = AccountType.Current;
+                        }
+
                         decimal initialDeposit;
                         bool isNumber;
                         do
@@ -73,7 +85,7 @@ namespace MiniBankingApp.UI
                             }
                         } while (!isNumber);
 
-                        SignUp(email, password, initialDeposit, firstname, lastname);
+                        SignUp(email, password, initialDeposit, firstname, lastname, type);
                         redo = false;
                         break;
                     case ConsoleKey.Tab:
@@ -123,9 +135,9 @@ namespace MiniBankingApp.UI
             Console.WriteLine("\nGoodbye!");
         }
 
-        private void SignUp(string email, string password, decimal initialDeposit, string firstname, string lastname)
+        private void SignUp(string email, string password, decimal initialDeposit, string firstname, string lastname, AccountType type)
         {
-            BankUser user = _userServ.CreateUser(firstname, lastname, email, password, initialDeposit);
+            BankUser user = _userServ.CreateUser(firstname, lastname, email, password, type, initialDeposit);
 
             Console.WriteLine($"New account created for {user.Lastname} {user.Firstname}. Account number: {user.BankAccounts.First().Number}.");
         }
@@ -216,6 +228,11 @@ namespace MiniBankingApp.UI
                     LoggedIn(user);
                     break;
             }
+        }
+
+        public void OnTransactionCompleted(object? obj, string message)
+        {
+            Console.WriteLine(message);
         }
     }
 }

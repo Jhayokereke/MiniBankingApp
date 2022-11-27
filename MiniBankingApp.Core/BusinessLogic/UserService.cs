@@ -1,5 +1,6 @@
 ﻿using MiniBankingApp.Core.Data;
 using MiniBankingApp.Core.Models;
+using MiniBankingApp.Core.Models.Enums;
 
 namespace MiniBankingApp.Core.BusinessLogic
 {
@@ -14,7 +15,7 @@ namespace MiniBankingApp.Core.BusinessLogic
             _accountServ = accountService;
         }
 
-        public BankUser CreateUser(string fname, string lname, string email, string password, decimal initialDeposit)
+        public BankUser CreateUser(string fname, string lname, string email, string password, AccountType type, decimal initialDeposit)
         {
             //create a new user object
             BankUser newUser = new BankUser
@@ -27,7 +28,7 @@ namespace MiniBankingApp.Core.BusinessLogic
             };
 
             //create a new account object
-            Account newAccount = _accountServ.CreateAccount(initialDeposit);
+            Account newAccount = _accountServ.CreateAccount(type, initialDeposit);
             //map the account object to the user object
             newUser.BankAccounts.Add(newAccount);
             //add the user object to the database

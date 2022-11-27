@@ -1,5 +1,6 @@
 ﻿using MiniBankingApp.Core.Data;
 using MiniBankingApp.Core.Models;
+using MiniBankingApp.Core.Models.Enums;
 using MiniBankingApp.Core.Utilities;
 
 namespace MiniBankingApp.Core.BusinessLogic
@@ -10,6 +11,7 @@ namespace MiniBankingApp.Core.BusinessLogic
         private const string CREDIT_DESCRIPTION_TEMPLATE = "CR - Deposit of #amount - #narration - Avail. Bal: #balance";
         private const string DEBIT_DESCRIPTION_TEMPLATE = "DR - Withrawal of #amount - #narration - Avail. Bal: #balance";
         private const string REVERSAL_DESCRIPTION_TEMPLATE = "RVSL - Reversal of #amount - Avail. Bal: #balance";
+        public event EventHandler<string>? TransactionCompleted;
 
         public AccountService(IAccountRepository accountRepository)
         {
@@ -29,10 +31,11 @@ namespace MiniBankingApp.Core.BusinessLogic
             return -1;
         }
 
-        public Account CreateAccount(decimal initialDeposit)
+        public Account CreateAccount(AccountType type, decimal initialDeposit)
         {
             Account newAccount = new Account
             {
+                Type = type,
                 Balance = initialDeposit,
                 TransactionPin = Constants.DEFAULT_TRANSACTION_PIN,
                 Number = Generator.GenerateAccountNumber(),
@@ -61,13 +64,14 @@ namespace MiniBankingApp.Core.BusinessLogic
             account.Balance += amount;
             account.Transactions.Add(new Transaction
             {
-                Type = Transaction.TransactionType.Credit,
+                Type = TransactionType.Credit,
                 AccountId = account.Id,
                 TransactionTime = DateTime.Now,
                 Amount = amount,
                 BalanceAfter = account.Balance,
                 Description = CREDIT_DESCRIPTION_TEMPLATE.Replace("#amount", amount.ToString()).Replace("#balance", account.Balance.ToString()).Replace("#narration", narration)
             });
+            TransactionCompleted?.Invoke(this, "Successful...");
             return _accountRepo.Update(account);
         }
 
@@ -136,7 +140,7 @@ namespace MiniBankingApp.Core.BusinessLogic
 
             account.Transactions.Add(new Transaction
             {
-                Type = Transaction.TransactionType.Credit,
+                Type = TransactionType.Credit,
                 AccountId = account.Id,
                 TransactionTime = DateTime.Now,
                 Amount = amount,
@@ -165,7 +169,7 @@ namespace MiniBankingApp.Core.BusinessLogic
             account.Balance += amount;
             account.Transactions.Add(new Transaction
             {
-                Type = Transaction.TransactionType.Credit,
+                Type = TransactionType.Credit,
                 AccountId = account.Id,
                 TransactionTime = DateTime.Now,
                 Amount = amount,

@@ -12,7 +12,6 @@ builder.RegisterType<AccountRepository>().As<IAccountRepository>();
 builder.RegisterType<UserService>().As<IUserService>();
 builder.RegisterType<AccountService>().As<IAccountService>();
 builder.RegisterType<App>().As<IApp>();
-builder.RegisterType<List<Account>>().As<ICollection<Account>>();
 
 var container = builder.Build();
 
